@@ -7,10 +7,12 @@
 -- 
 -- Autores: Gabriel Iglesias 11-10476.
 --		    Oscar Guillen	11-11264.
+import Data.Maybe 
+import Data.List (foldl')
+import Data.List (nub)
 
-
-data Proposition = Bool
-				 | Var
+data Proposition = Cons Bool
+				 | V String
 				 | Not Proposition
 				 | Conj Proposition Proposition
 				 | Disj Proposition Proposition
@@ -19,6 +21,9 @@ data Proposition = Bool
 
 type Environment = [(String,Bool)]
 a =  [("a",True),("b",False),("c",False),("d",False),("e",False)]
+p = (Conj (V "b") (Impl (V "a") (Disj (Cons True) (V "e"))))
+
+
 
 find :: Environment -> String -> Maybe Bool
 find [] k         = Nothing
@@ -26,9 +31,8 @@ find ((c,v):xs) k = if k == c then Just v
 							  else find xs k
 
 
-
 addOrReplace :: Environment -> String -> Bool -> Environment
-addOrReplace e k v = reverse (foldl merge [(k,v)] e)
+addOrReplace e k v = reverse (foldl' merge [(k,v)] e)
 	where
 		merge x (s,v) = if s == (fst . last) x then last x:(init x)
 											   else (s,v):x
@@ -43,12 +47,39 @@ remove e k = filter (\(s,v) -> s /= k) e
 
 
 evalP :: Environment -> Proposition -> Maybe Bool
-evalP e p = Just True
+evalP _ (Cons b) = Just b
+evalP e (V s) = find e s
+evalP e (Not p) = putNot (evalP e p) 
+	where
+		putNot (Just a) = Just (not a)
+		putNot Nothing = Nothing
+evalP e (Conj p1 p2) = putConj (evalP e p1) (evalP e p2)
+	where
+		putConj Nothing _ = Nothing
+		putConj _ Nothing = Nothing
+		putConj (Just False) _ = Just False
+		putConj _ (Just False) = Just False
+		putConj _ _ = Just True
+evalP e (Disj p1 p2) = putDisj (evalP e p1) (evalP e p2)
+	where
+		putDisj Nothing p = Nothing
+		putDisj p Nothing = Nothing
+		putDisj (Just True) _ = Just True
+		putDisj _ (Just True) = Just True
+		putDisj _ _ = Just False
+evalP e (Impl p1 p2) = evalP e (Disj (Not p1) p2) 															
 
 
 vars :: Proposition -> [String]
-vars p = []
-
+vars p = nub (findVar p)
+	where
+		findVar (Cons b) = []
+		findVar (V s) = [s]
+		findVar (Not p) = findVar p
+		findVar (Conj p1 p2) = findVar p1 ++ findVar p2
+		findVar (Disj p1 p2) = findVar p1 ++ findVar p2
+		findVar (Impl p1 p2) = findVar p1 ++ findVar p2
+ 
 
 isTautology :: Proposition -> Bool
 isTautology p = True
