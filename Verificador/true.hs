@@ -81,8 +81,8 @@ vars p = nub (findVar p)
  
 
 isTautology :: Proposition -> Bool
-isTautology p = foldl (isTrue p) True $ map (zip $ vars p) (allPermutations (length (vars p)))
+isTautology p = foldl (isTrue p) True $ map (zip $ vars p) (allPermutations (vars p))
 	where
 		isTrue p b e = fromJust (evalP e p) && b
-		allPermutations 1 = [[True], [False]]
-		allPermutations n = [y:x | y <- [True, False], x <- allPermutations (n-1)]
+		allPermutations [a] = [[True], [False]]
+		allPermutations (a:as) = [y:x | y <- [True, False], x <- allPermutations (as)]
