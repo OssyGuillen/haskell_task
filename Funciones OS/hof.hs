@@ -1,12 +1,13 @@
-{-- Universidad Simón Bolívar.
-	Departamento de Computación y Tecnología de la Información.
-    CI3661 - Laboratorio de Lenguajes de Programación I
-    Trimestre Enero - Marzo 2016.
-   
-    @author Gabriel Iglesias 11-10476.
-    @author Oscar Guillen    11-11264.
-
--}
+-- Universidad Simón Bolívar
+-- Departamento de Computación y Tecnología de la Información
+-- CI3661 - Laboratorio de Lenguajes de Programación I
+-- Trimestre Enero - Marzo 2016.
+-- 
+-- Tarea Haskell
+-- Funciones de orden superior
+--  
+-- autores Gabriel Iglesias 11-10476.
+--         Oscar Guillen    11-11264.
 
 -- Implementación usando lista por compresión.
 filterC :: (a -> Bool) -> [a] -> [a]
