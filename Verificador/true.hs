@@ -8,8 +8,7 @@
 -- Autores: Gabriel Iglesias 11-10476.
 --		    Oscar Guillen	11-11264.
 import Data.Maybe 
-import Data.List (foldl')
-import Data.List (nub)
+import Data.List (foldl',nub)
 
 data Proposition = Cons Bool
 				 | V String
@@ -32,7 +31,7 @@ find ((c,v):xs) k = if k == c then Just v
 
 
 addOrReplace :: Environment -> String -> Bool -> Environment
-addOrReplace e k v = reverse (foldl' merge [(k,v)] e)
+addOrReplace e k v = reverse (foldl merge [(k,v)] e)
 	where
 		merge x (s,v) = if s == (fst . last) x then last x:(init x)
 											   else (s,v):x
@@ -82,4 +81,7 @@ vars p = nub (findVar p)
  
 
 isTautology :: Proposition -> Bool
-isTautology p = True
+isTautology p = foldl (isTrue p) True $ map (zip $ vars p) (allPermutations (length (vars p)))
+	where
+		isTrue p b e = fromJust (evalP e p) && b
+		allPermutations n = [y:x | y <- [True, False], x <- allPermutations (n-1)]
