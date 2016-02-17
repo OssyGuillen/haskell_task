@@ -1,3 +1,12 @@
+-- Universidad Simón Bolívar
+-- Departamento de Computación y Tecnología de la Información
+-- CI-3661 - Laboratorio de Lenguajes de Programación I
+--
+-- Tarea de Haskell
+-- Juego Lambdajack: Módulo Cards.
+-- 
+-- Autores: Gabriel Iglesias 11-10476.
+--		    Oscar Guillen	11-11264.
 module Cards where
 
 data Card = Card {
@@ -15,4 +24,4 @@ empty = H []
 
 
 size :: Hand -> Int
-size h =  0
+size H xs = length xs
