@@ -11,6 +11,8 @@ module LambdaJack where
 
 import Cards
 import Data.Maybe
+import System.Random
+import Data.List (foldl')
 
 data Player = LambdaJack | You
 			deriving(Show)
@@ -75,4 +77,5 @@ playLambda h = getCard (h,empty)
 							 else getCard $ fromJust $ draw m a
 
 
---shuffle :: StdGen -> Hand -> Hand
+shuffle :: StdGen -> Hand -> Hand
+shuffle a b = b
