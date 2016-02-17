@@ -24,4 +24,4 @@ empty = H []
 
 
 size :: Hand -> Int
-size H xs = length xs
+size (H xs) = length xs

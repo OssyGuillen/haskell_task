@@ -9,8 +9,26 @@
 --		    Oscar Guillen	11-11264.
 module LambdaJack where
 
+data Card = Card {
+	lvalue :: Value,
+	suit :: Suit
+}
+data Suit = Clubs | Diamonds | Spades | Hearts
+data Value = Numeric Int | Jack | Queen | King | Ace
+
+newtype Hand = H [Card]
+
 data Player = LambdaJack | You
 
 
 value :: Hand -> Int
-value h = 0
+value (H cards) = if (evaluate 11 cards) > 21 then evaluate 1 cards
+											  else evaluate 11 cards
+	where
+		evaluate ace cards = foldl (sumValue ace) 0 cards
+			where
+				sumValue ace i (Card (Numeric n) _) = i + n
+				sumValue ace i (Card Jack _) = i + 10
+				sumValue ace i (Card King _) = i + 10
+				sumValue ace i (Card Queen _) = i + 10
+				sumValue ace i (Card Ace _) = i + ace
