@@ -10,14 +10,15 @@
 module Cards where
 
 data Card = Card {
-	value :: Value,
+	lvalue :: Value,
 	suit :: Suit
-}
+} deriving(Show)
 
-data Suit = Clubs | Diamonds | Spades | Hearts
-data Value = Numeric Int | Jack | Queen | King | Ace
+data Suit = Clubs | Diamonds | Spades | Hearts deriving(Show)
+data Value = Numeric Int | Jack | Queen | King | Ace deriving(Show)
 
 newtype Hand = H [Card]
+	deriving(Show)
 
 empty :: Hand
 empty = H []
