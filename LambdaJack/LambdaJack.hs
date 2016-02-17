@@ -10,6 +10,7 @@
 module LambdaJack where
 
 import Cards
+import Data.Maybe
 
 data Player = LambdaJack | You
 			deriving(Show)
@@ -66,7 +67,12 @@ draw (H m) (H player) = Just (H $ tail m,H (head m:player))
 
 --Devuelve la mano de Lambda luego de jugar su turno.
 playLambda :: Hand -> Hand
-playLambda (H m) = H m
+playLambda h = getCard (h,empty)
+	where
+		getCard (m,(H [])) = getCard $ fromJust $ draw m (H [])
+		getCard (m,a) 	   = if busted a || value a >= 16
+							 then a
+							 else getCard $ fromJust $ draw m a
 
 
 --shuffle :: StdGen -> Hand -> Hand
