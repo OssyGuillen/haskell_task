@@ -78,4 +78,24 @@ playLambda h = getCard (h,empty)
 
 
 shuffle :: StdGen -> Hand -> Hand
-shuffle a b = b
+shuffle  g deck = shuffle' g (deck, empty)
+
+-- draw random cards out of deck and put it in d
+shuffle' :: StdGen -> (Hand, Hand) -> Hand
+shuffle' _ (H [], h) = h
+shuffle' g (deck, h)  = shuffle' g' takeCard
+  where (rand, g') = randomR(1, size deck) g
+        takeCard   = takeCardNum rand deck h []
+	        where
+				takeCardNum 1 (H deck) h ndeck = (H ((reverse ndeck)++(tail deck)), snd $ fromJust $ draw (H deck) h)
+				takeCardNum i (H (x:xs)) h ndeck = takeCardNum (i-1) (H xs) h (x:ndeck) 
+        	
+
+
+pickWord gen ws = snd $ foldl' pick (0,(gen,"")) ws
+	where 
+		pick (n,(g,w)) nw = (n', if v == 1  then (g',nw)
+													else (g',w))
+					where 	
+						(v,g') = randomR(1,n') g
+						n'     = n + 1 :: Int
