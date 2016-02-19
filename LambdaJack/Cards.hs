@@ -12,10 +12,27 @@ module Cards where
 data Card = Card {
 	lvalue :: Value,
 	suit :: Suit
-} deriving(Show)
+} 
 
-data Suit = Clubs | Diamonds | Spades | Hearts deriving(Show)
-data Value = Numeric Int | Jack | Queen | King | Ace deriving(Show)
+instance Show Card where
+	show (Card value suit) = show value ++ show suit 
+
+data Suit = Clubs | Diamonds | Spades | Hearts
+
+instance Show Suit where
+	show Clubs = "♣ "
+	show Diamonds = "♦ "
+	show Spades = "♤ "
+	show Hearts = "♥ "
+
+data Value = Numeric Int | Jack | Queen | King | Ace
+	
+instance Show Value where
+	show (Numeric x) = show x ++ " "
+	show Jack = "J "
+	show Queen = "Q "
+	show King = "K "
+	show Ace = "A "
 
 newtype Hand = H [Card]
 	deriving(Show)
