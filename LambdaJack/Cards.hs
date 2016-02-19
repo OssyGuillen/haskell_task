@@ -7,10 +7,13 @@
 -- 
 -- Autores: Gabriel Iglesias 11-10476.
 --		    Oscar Guillen	11-11264.
-module Cards where
+module Cards (Hand (H), Card (Card),
+			  Suit (Clubs, Diamonds, Spades, Hearts),
+			  Value(Numeric, Jack, Queen, King, Ace), 
+			  empty, size) where
 
 data Card = Card {
-	lvalue :: Value,
+	value :: Value,
 	suit :: Suit
 } 
 

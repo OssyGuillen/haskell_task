@@ -19,10 +19,6 @@ data Proposition = Cons Bool
 				 deriving(Show,Eq)
 
 type Environment = [(String,Bool)]
-a =  [("a",True),("b",False),("c",False),("d",False),("e",False)]
-p = (Conj (V "b") (Impl (V "a") (Disj (Cons True) (V "e"))))
-
-
 
 find :: Environment -> String -> Maybe Bool
 find [] k         = Nothing
@@ -79,7 +75,7 @@ vars p = nub (findVar p)
 		findVar (Disj p1 p2) = findVar p1 ++ findVar p2
 		findVar (Impl p1 p2) = findVar p1 ++ findVar p2
  
-
+ 
 isTautology :: Proposition -> Bool
 isTautology p = foldl (isTrue p) True $ foldr allPermutations [[]] (vars p)
 	where
