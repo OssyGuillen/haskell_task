@@ -28,14 +28,17 @@ instance Show Suit where
 data Value = Numeric Int | Jack | Queen | King | Ace
 	
 instance Show Value where
-	show (Numeric x) = show x ++ " "
+	show (Numeric x) = show x
 	show Jack = "J "
 	show Queen = "Q "
 	show King = "K "
 	show Ace = "A "
 
 newtype Hand = H [Card]
-	deriving(Show)
+
+instance Show Hand where
+	show (H []) = ""
+	show (H (a:as)) = show a ++ " " ++ show (H as) 
 
 empty :: Hand
 empty = H []
