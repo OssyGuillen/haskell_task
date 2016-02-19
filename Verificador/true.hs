@@ -75,11 +75,15 @@ vars p = nub (findVar p)
 		findVar (Disj p1 p2) = findVar p1 ++ findVar p2
 		findVar (Impl p1 p2) = findVar p1 ++ findVar p2
  
- 
+
 isTautology :: Proposition -> Bool
-isTautology p = foldl (isTrue p) True $ foldr allPermutations [[]] (vars p)
+isTautology p = foldl' (isTrue p) True $ foldr allPermutations [[]] (vars p)
 	where
 		isTrue p b e = fromJust (evalP e p) && b
+		-- Se van construyendo las permutaciones en el arreglo vacío.
+		-- para UNA variable.
 		allPermutations str env = foldr (permute str) [] env
 			where
+				-- Se agregan los dos posibles valores al arreglo de valores y 
+				-- se agrega a la vez al arreglo de permutaciones.
 				permute str env lenv = ((str,True):env):((str,False):env):lenv

@@ -13,15 +13,6 @@
 filterC :: (a -> Bool) -> [a] -> [a]
 filterC p xs = [ x | x <- xs , p x ] 
 
--- Implementación usando la función map y otras funciones auxiliares.
-{-filterM :: (a -> Bool) -> [a] -> [a]
-filterM _ [] = []
-filterM p (xs) = foldl eval [] (zip xs (map p xs))
-	where	
-		eval as (a, True)  = a:as
-		eval as (a, False) = as
--}
-
 -- Funcion auxiliar
 comparar :: [Bool] -> [a] -> [a]
 comparar [] (_:_) = []
