@@ -10,7 +10,7 @@
 import Data.Maybe 
 import Data.List (foldl',nub)
 
-data Proposition = Cons Bool
+data Proposition = C Bool
 				 | V String
 				 | Not Proposition
 				 | Conj Proposition Proposition
@@ -20,29 +20,31 @@ data Proposition = Cons Bool
 
 type Environment = [(String,Bool)]
 
+
+-- Busca una variable en el entorno de evaluación.
 find :: Environment -> String -> Maybe Bool
 find [] k         = Nothing
 find ((c,v):xs) k = if k == c then Just v
 							  else find xs k
 
 
+-- Agrega una variable con su valor al entorno de evaluación.
+-- en caso de existir, se reemplaza por el nuevo valor.
 addOrReplace :: Environment -> String -> Bool -> Environment
 addOrReplace e k v = reverse (foldl merge [(k,v)] e)
 	where
 		merge x (s,v) = if s == (fst . last) x then last x:(init x)
 											   else (s,v):x
 
---addOrReplace e k v = reverse (inReverse (reverse e) k v)
---inReverse [] s v = [(s,v)]
---inReverse ((s,v):rs) ns nv =	if s == ns then (s,nv) : rs
---										   else (s,v) : inReverse rs ns nv
 
+-- Remueve una variable del entorno de evaluación.
 remove :: Environment -> String -> Environment
 remove e k = filter (\(s,v) -> s /= k) e
 
 
+-- Evalúa el valor de una proposición.
 evalP :: Environment -> Proposition -> Maybe Bool
-evalP _ (Cons b) = Just b
+evalP _ (C b) = Just b
 evalP e (V s) = find e s
 evalP e (Not p) = putNot (evalP e p) 
 	where
@@ -65,10 +67,11 @@ evalP e (Disj p1 p2) = putDisj (evalP e p1) (evalP e p2)
 evalP e (Impl p1 p2) = evalP e (Disj (Not p1) p2) 															
 
 
+-- Consigue las variables presentes en una proposición.
 vars :: Proposition -> [String]
 vars p = nub (findVar p)
 	where
-		findVar (Cons b) = []
+		findVar (C b) = []
 		findVar (V s) = [s]
 		findVar (Not p) = findVar p
 		findVar (Conj p1 p2) = findVar p1 ++ findVar p2
@@ -76,6 +79,7 @@ vars p = nub (findVar p)
 		findVar (Impl p1 p2) = findVar p1 ++ findVar p2
  
 
+-- Verifica si una proposición es una TAUTOLOGÍA.
 isTautology :: Proposition -> Bool
 isTautology p = foldl' (isTrue p) True $ foldr allPermutations [[]] (vars p)
 	where
